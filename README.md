@@ -244,7 +244,7 @@ approach has two disadvantages:
 when the number of hints is low.
 2. Puzzles are of low quality with an excessive number of hints.
 
-The algorithm generates symmetric puzzles. It is easy to change this - simply ignore idx2
+The algorithm generates symmetric puzzles. It is easy to change this - simply ignore `idx2`
 and add one hole at a time. While this approach will find the minimum number of hints,
 the results are less aesthetically pleasing and the difficulty spread is hostile - 
 Diabolical difficulty is a bit much for most people.
