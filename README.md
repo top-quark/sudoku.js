@@ -239,6 +239,7 @@ Sudoku.design: function() {
 Rather than working backwards from the complete solution and adding holes, it would be
 possible to start with a state of all zeroes and add work forwards, adding hints. This
 approach has two disadvantages:
+
 1. Puzzle generation takes longer because there are more possibilities to search
 when the number of hints is low.
 2. Puzzles are of low quality with an excessive number of hints.
