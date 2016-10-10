@@ -180,6 +180,7 @@ above `depthFirst` function can grind over the [hardest puzzles](http://magictou
 in no time flat. Designing a puzzle, on the other hand, is algorithmically more interesting.
 
 The algorithm used in this library is as follows:
+
 1. Let puzzle be a random solution to an empty grid
 2. Shuffle a positions array [1..81]
 3. Let idx1 be positions[0] and idx2 be 80 - idx1
