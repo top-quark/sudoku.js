@@ -181,15 +181,16 @@ in no time flat. Designing a puzzle, on the other hand, is algorithmically more 
 
 The algorithm used in this library is as follows:
 
-1. Let puzzle be a random solution to an empty grid
-2. Shuffle a positions array [0..80]
-3. Let idx1 be positions[0] and idx2 be 80 - idx1
-4. Set puzzle[idx1] = puzzle[idx2] = 0
-5. Solve puzzle, finding no more than two solutions
-6. Restore puzzle[idx1] and puzzle[idx2] if the number of solutions > 1
-7. Discard idx1 and idx2 from positions
-8. Goto 3 if positions is not empty
-9. Return puzzle
+1. Let `puzzle` be a random solution to an empty grid
+2. Let `positions` be an array of indices of `puzzle` [0..80]
+3. Shuffle `positions`
+4. Let `idx1` be `positions[0]` and `idx2` be 80 - `idx1`
+5. Set `puzzle[idx1]` = `puzzle[idx2]` = 0
+6. Solve `puzzle`, finding no more than two solutions
+7. Restore `puzzle[idx1]` and `puzzle[idx2]` if the number of solutions > 1
+8. Erase `idx1` and `idx2` from `positions`
+9. Goto 4 if `positions` is not empty
+10. Return `puzzle`
 
 Here's the implementation:
 ```javascript
