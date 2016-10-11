@@ -9,9 +9,7 @@
 this.Sudoku = (function(window) {
     "use strict";
     /**
-     * For an index in the puzzle state, gets the enlosing 3x3 square
-     * @param idx the index into the puzzle state array
-     * @return an array representing the enclosing square
+     * For an index in the puzzle state, returns the indices of the enclosing square
      */
     var getEnclosingSquare = function(idx) {
         var x = idx % 9;
@@ -29,10 +27,8 @@ this.Sudoku = (function(window) {
     };
 
     /**
-     * For an index in the puzzle state, gets a reference to
-     * the enlosing 3x3 square
-     * @param idx the index into the puzzle state array
-     * @return a value between 0 and 8 referencing the enclosing square
+     * For an index in the puzzle state, returns a reference to
+     * the enlosing 3x3 square (a number between 0 and 8)
      */
     var getEnclosingSquareRef = function(idx) {
         var x = idx % 9;
@@ -50,9 +46,7 @@ this.Sudoku = (function(window) {
         rows = [],
         columns = [];
         
-    // Transform the linear array into an array of 3x3 squares
-    // (note we only get the indices rather than the values to
-    // avoid having to do the calculations repeatedly)
+    // Calculate the indices (0..80) of all the rows, columns and 3x3 squares
     for (i = 0; i < 3; i++) {
         var x = i * 3 + 1;
         for (j = 0; j < 3; j++) {
@@ -70,6 +64,9 @@ this.Sudoku = (function(window) {
         }
     }
     
+    /**
+     * Set the puzzle to an initial state of all 0s
+     */
     var initState = function() {
         //solved = 0;
         currState = [];
@@ -79,12 +76,9 @@ this.Sudoku = (function(window) {
     },
     
     /**
-     * Gets an array of possible values in a given cell in the grid;
+     * Returns an array of possible values in a given index;
      * the values returned depend on the values in the current row,
      * current column and enclosing square)
-     * @param index the index into the puzzle state
-     * @return an array of possible values (hopefully containing
-     * just one value)
      */
     getPossible = function(index) {
         if (index < 0 || index >= 81) {
@@ -128,7 +122,7 @@ this.Sudoku = (function(window) {
     },
     
     /**
-     * Determines whether placing testVal at index violates constraints
+     * Determines whether placing testValue at index violates constraints
      */
     isPossible = function(testValue, index) {
         var row = rows[Math.floor(index / 9)],
@@ -338,7 +332,9 @@ this.Sudoku = (function(window) {
             return Sudoku.exportGame();
         },
         
-        // Gets the current state of the game
+        /**
+         * Gets the current state of the game
+         */
         state: function() {
             var ret = [], i;
             for (i = 0; i < 81; ++i) {
@@ -347,7 +343,9 @@ this.Sudoku = (function(window) {
             return ret;
         },
         
-        // Adds a value at an index
+        /**
+         * Sets a value at an index if the result will not be a violation of constraints
+         */
         add: function(v, idx) {
             if (0 === v || isPossible(v, idx)) {
                 currState[idx] = v;
