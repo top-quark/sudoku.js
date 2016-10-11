@@ -73,7 +73,7 @@ this.Sudoku = (function(window) {
 	var initState = function() {
 		//solved = 0;
 		currState = [];
-		for (var i = 0; i < 81; ++i) {
+		for (i = 0; i < 81; ++i) {
 		    currState[i] = 0;
 		}
 	},
