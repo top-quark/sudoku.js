@@ -9,11 +9,11 @@
 this.Sudoku = (function(window) {
     "use strict";
     /**
-	 * For an index in the puzzle state, gets the enlosing 3x3 square
-	 * @param idx the index into the puzzle state array
-	 * @return an array representing the enclosing square
-	 */
-	var getEnclosingSquare = function(idx) {
+     * For an index in the puzzle state, gets the enlosing 3x3 square
+     * @param idx the index into the puzzle state array
+     * @return an array representing the enclosing square
+     */
+    var getEnclosingSquare = function(idx) {
         var x = idx % 9;
         var y = Math.floor(idx / 9);
         // Take x and y down to the nearest multiple of three
@@ -26,41 +26,41 @@ this.Sudoku = (function(window) {
             }
         }
         return ret;
-	};
+    };
 
-	/**
-	 * For an index in the puzzle state, gets a reference to
-	 * the enlosing 3x3 square
-	 * @param idx the index into the puzzle state array
-	 * @return a value between 0 and 8 referencing the enclosing square
-	 */
-	var getEnclosingSquareRef = function(idx) {
-		var x = idx % 9;
-		var y = Math.floor(idx / 9);
-		// Further reduce x
-		x = Math.floor(x / 3);
-		y = Math.floor(y / 3);
-		return x * 3 + y;
-	};
+    /**
+     * For an index in the puzzle state, gets a reference to
+     * the enlosing 3x3 square
+     * @param idx the index into the puzzle state array
+     * @return a value between 0 and 8 referencing the enclosing square
+     */
+    var getEnclosingSquareRef = function(idx) {
+        var x = idx % 9;
+        var y = Math.floor(idx / 9);
+        // Further reduce x
+        x = Math.floor(x / 3);
+        y = Math.floor(y / 3);
+        return x * 3 + y;
+    };
 
-	var currState = [],
+    var currState = [],
         i, j,
         midpoints = [],
         squares = [],
         rows = [],
         columns = [];
-	    
-	// Transform the linear array into an array of 3x3 squares
-	// (note we only get the indices rather than the values to
-	// avoid having to do the calculations repeatedly)
-	for (i = 0; i < 3; i++) {
+        
+    // Transform the linear array into an array of 3x3 squares
+    // (note we only get the indices rather than the values to
+    // avoid having to do the calculations repeatedly)
+    for (i = 0; i < 3; i++) {
         var x = i * 3 + 1;
         for (j = 0; j < 3; j++) {
             var y = j * 3 + 1;
             midpoints.push(x + 9 * y);
         }
-	}
-	for (i = 0; i < 9; i++) {
+    }
+    for (i = 0; i < 9; i++) {
         squares.push(getEnclosingSquare(midpoints[i]));
         rows.push([]);
         columns.push([]);
@@ -68,25 +68,25 @@ this.Sudoku = (function(window) {
             rows[i].push(9 * i + j);
             columns[i].push(9 * j + i);
         }
-	}
-	
-	var initState = function() {
+    }
+    
+    var initState = function() {
         //solved = 0;
         currState = [];
         for (i = 0; i < 81; ++i) {
             currState[i] = 0;
         }
-	},
-	
-	/**
-	 * Gets an array of possible values in a given cell in the grid;
-	 * the values returned depend on the values in the current row,
-	 * current column and enclosing square)
-	 * @param index the index into the puzzle state
-	 * @return an array of possible values (hopefully containing
-	 * just one value)
-	 */
-	getPossible = function(index) {
+    },
+    
+    /**
+     * Gets an array of possible values in a given cell in the grid;
+     * the values returned depend on the values in the current row,
+     * current column and enclosing square)
+     * @param index the index into the puzzle state
+     * @return an array of possible values (hopefully containing
+     * just one value)
+     */
+    getPossible = function(index) {
         if (index < 0 || index >= 81) {
             return [];
         }
@@ -125,12 +125,12 @@ this.Sudoku = (function(window) {
             }
         }
         return ret;
-	},
+    },
     
     /**
      * Determines whether placing testVal at index violates constraints
      */
-	isPossible = function(testValue, index) {
+    isPossible = function(testValue, index) {
         var row = rows[Math.floor(index / 9)],
             col = columns[index % 9],
             square = squares[getEnclosingSquareRef(index)],
@@ -149,20 +149,20 @@ this.Sudoku = (function(window) {
         }
 
         return true;
-	},
+    },
     
     /**
      * Loads the game state from a string of 81 digits
      */
-	initFromString = function(s) {
-	    s = "" + s;
-	    if (!(s && 81 === s.length)) {
-	        return false;
-	    }
-	    // Replace any non-digit characters with '0'
-	    s = s.replace(/\D/g, '0');
-	    var oldState = currState, i, j, idx = 0, ret = true, zero = "0".charCodeAt(0);
-	    currState = [];
+    initFromString = function(s) {
+        s = "" + s;
+        if (!(s && 81 === s.length)) {
+            return false;
+        }
+        // Replace any non-digit characters with '0'
+        s = s.replace(/\D/g, '0');
+        var oldState = currState, i, j, idx = 0, ret = true, zero = "0".charCodeAt(0);
+        currState = [];
         for (i = 0; i < 9; i++) {
             for (j = 0; j < 9; j++, ++idx) {
                 currState.push(s.charCodeAt(idx) - zero);
@@ -177,53 +177,53 @@ this.Sudoku = (function(window) {
         }
         
         return true;
-	},
+    },
 
-	/**
-	 * Shuffles an array
-	 */
-	shuffle = function(a) {
-	    var c = a.length - 1, t, r;
-	    for (; c > 0; --c) {
-	        r = Math.floor(Math.random() * (c + 1));
-	        // Swap the item at c with that at r
-	        t = a[c];
-	        a[c] = a[r];
-	        a[r] = t;
-	    }
-	},
+    /**
+     * Shuffles an array
+     */
+    shuffle = function(a) {
+        var c = a.length - 1, t, r;
+        for (; c > 0; --c) {
+            r = Math.floor(Math.random() * (c + 1));
+            // Swap the item at c with that at r
+            t = a[c];
+            a[c] = a[r];
+            a[r] = t;
+        }
+    },
 
-	/**
-	 * Depth-first search algorithm
-	 * Recursively tries valid moves until it finds an impasse
-	 * or a solution; if a solution is found, it is passed
-	 * to a callback function which may return true to
-	 * continue the search or false to stop it.
-	 */
-	depthFirst = function(index, ctx, callback) {
-	    // Advance past solved cells
-	    for (; index < 81 && currState[index]; ++index) {
-	    }
-	    if (index === 81) {
-	        // Got a solution
-	        return callback(currState.slice(0), ctx);
-	    }
-	    var poss = getPossible(index), k, ret;
-	    if (ctx.random) {
-	        // Design mode; we want a random solution
-	        shuffle(poss);	        
-	    }
-	    for (k = 0; k < poss.length; ++k) {
-	        currState[index] = poss[k];
-	        ret = depthFirst(index + 1, ctx, callback);
-	        currState[index] = 0;
-	        if (false === ret) {
-	            // Found as many solutions as are required
-	            break;
-	        }
-	    }
-	    return ret;
-	};
+    /**
+     * Depth-first search algorithm
+     * Recursively tries valid moves until it finds an impasse
+     * or a solution; if a solution is found, it is passed
+     * to a callback function which may return true to
+     * continue the search or false to stop it.
+     */
+    depthFirst = function(index, ctx, callback) {
+        // Advance past solved cells
+        for (; index < 81 && currState[index]; ++index) {
+        }
+        if (index === 81) {
+            // Got a solution
+            return callback(currState.slice(0), ctx);
+        }
+        var poss = getPossible(index), k, ret;
+        if (ctx.random) {
+            // Design mode; we want a random solution
+            shuffle(poss);          
+        }
+        for (k = 0; k < poss.length; ++k) {
+            currState[index] = poss[k];
+            ret = depthFirst(index + 1, ctx, callback);
+            currState[index] = 0;
+            if (false === ret) {
+                // Found as many solutions as are required
+                break;
+            }
+        }
+        return ret;
+    };
 
     return {
         /**
