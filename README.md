@@ -182,7 +182,7 @@ in no time flat. Designing a puzzle, on the other hand, is algorithmically more 
 The algorithm used in this library is as follows:
 
 1. Let puzzle be a random solution to an empty grid
-2. Shuffle a positions array [1..81]
+2. Shuffle a positions array [0..80]
 3. Let idx1 be positions[0] and idx2 be 80 - idx1
 4. Set puzzle[idx1] = puzzle[idx2] = 0
 5. Solve puzzle, finding no more than two solutions
