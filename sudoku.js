@@ -14,18 +14,18 @@ this.Sudoku = (function(window) {
 	 * @return an array representing the enclosing square
 	 */
 	var getEnclosingSquare = function(idx) {
-		var x = idx % 9;
-		var y = Math.floor(idx / 9);
-		// Take x and y down to the nearest multiple of three
-		x -= x % 3;
-		y -= y % 3;
-		var ret = [];
-		for (var i = 0; i < 3; i++) {
-			for (var j = 0; j < 3; j++) {
-				ret.push(x + j + (y + i) * 9);
-			}
-		}
-		return ret;
+        var x = idx % 9;
+        var y = Math.floor(idx / 9);
+        // Take x and y down to the nearest multiple of three
+        x -= x % 3;
+        y -= y % 3;
+        var ret = [];
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                ret.push(x + j + (y + i) * 9);
+            }
+        }
+        return ret;
 	};
 
 	/**
@@ -44,38 +44,38 @@ this.Sudoku = (function(window) {
 	};
 
 	var currState = [],
-	    i, j,
-	    midpoints = [],
-	    squares = [],
-	    rows = [],
-	    columns = [];
+        i, j,
+        midpoints = [],
+        squares = [],
+        rows = [],
+        columns = [];
 	    
 	// Transform the linear array into an array of 3x3 squares
 	// (note we only get the indices rather than the values to
 	// avoid having to do the calculations repeatedly)
 	for (i = 0; i < 3; i++) {
-		var x = i * 3 + 1;
-		for (j = 0; j < 3; j++) {
-			var y = j * 3 + 1;
-			midpoints.push(x + 9 * y);
-		}
+        var x = i * 3 + 1;
+        for (j = 0; j < 3; j++) {
+            var y = j * 3 + 1;
+            midpoints.push(x + 9 * y);
+        }
 	}
 	for (i = 0; i < 9; i++) {
-		squares.push(getEnclosingSquare(midpoints[i]));
-		rows.push([]);
-		columns.push([]);
-		for (j = 0; j < 9; j++) {
-			rows[i].push(9 * i + j);
-			columns[i].push(9 * j + i);
-		}
+        squares.push(getEnclosingSquare(midpoints[i]));
+        rows.push([]);
+        columns.push([]);
+        for (j = 0; j < 9; j++) {
+            rows[i].push(9 * i + j);
+            columns[i].push(9 * j + i);
+        }
 	}
 	
 	var initState = function() {
-		//solved = 0;
-		currState = [];
-		for (i = 0; i < 81; ++i) {
-		    currState[i] = 0;
-		}
+        //solved = 0;
+        currState = [];
+        for (i = 0; i < 81; ++i) {
+            currState[i] = 0;
+        }
 	},
 	
 	/**
@@ -87,68 +87,68 @@ this.Sudoku = (function(window) {
 	 * just one value)
 	 */
 	getPossible = function(index) {
-		if (index < 0 || index >= 81) {
-			return [];
-		}
-		if (0 != currState[index]) {
-			return [currState[index]];
-		}
+        if (index < 0 || index >= 81) {
+            return [];
+        }
+        if (0 != currState[index]) {
+            return [currState[index]];
+        }
 
-		// Check that the test value is not already present
-		// in the enclosing square, current row or current
-		// column
-		var squareRef = getEnclosingSquareRef(index),
-		    square = squares[squareRef],
-		    rowNo = Math.floor(index / 9),
-		    colNo = index % 9,
+        // Check that the test value is not already present
+        // in the enclosing square, current row or current
+        // column
+        var squareRef = getEnclosingSquareRef(index),
+            square = squares[squareRef],
+            rowNo = Math.floor(index / 9),
+            colNo = index % 9,
             ret = [], i, j;
-		for (i = 1; i <= 9; i++) {
-			var poss = true;
-			for (j = 0; j < 9; j++) {
-				if (currState[square[j]] === i) {
-					poss = false;
-					break;
-				}
-				var idx = j + rowNo * 9;
-				if (currState[idx] === i) {
-					poss = false;
-					break;
-				}
-				idx = j * 9 + colNo;
-				if (currState[idx] === i) {
-					poss = false;
-					break;
-				}
-			}
-			if (poss) {
-				ret.push(i);
-			}
-		}
-		return ret;
+        for (i = 1; i <= 9; i++) {
+            var poss = true;
+            for (j = 0; j < 9; j++) {
+                if (currState[square[j]] === i) {
+                    poss = false;
+                    break;
+                }
+                var idx = j + rowNo * 9;
+                if (currState[idx] === i) {
+                    poss = false;
+                    break;
+                }
+                idx = j * 9 + colNo;
+                if (currState[idx] === i) {
+                    poss = false;
+                    break;
+                }
+            }
+            if (poss) {
+                ret.push(i);
+            }
+        }
+        return ret;
 	},
     
     /**
      * Determines whether placing testVal at index violates constraints
      */
 	isPossible = function(testValue, index) {
-		var row = rows[Math.floor(index / 9)],
-		    col = columns[index % 9],
-		    square = squares[getEnclosingSquareRef(index)],
-		    i;
+        var row = rows[Math.floor(index / 9)],
+            col = columns[index % 9],
+            square = squares[getEnclosingSquareRef(index)],
+            i;
 
-		for (i = 0; i < 9; i++) {
-			if (row[i] !== index && currState[row[i]] === testValue) {
-			    return false;
-			}
-			if (col[i] !== index && currState[col[i]] === testValue) {
-			    return false;
-			}
-			if (square[i] !== index && currState[square[i]] === testValue) {
-			    return false;
-			}
-		}
+        for (i = 0; i < 9; i++) {
+            if (row[i] !== index && currState[row[i]] === testValue) {
+                return false;
+            }
+            if (col[i] !== index && currState[col[i]] === testValue) {
+                return false;
+            }
+            if (square[i] !== index && currState[square[i]] === testValue) {
+                return false;
+            }
+        }
 
-		return true;
+        return true;
 	},
     
     /**
