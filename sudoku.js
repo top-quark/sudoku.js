@@ -12,14 +12,14 @@ this.Sudoku = (function(window) {
      * For an index in the puzzle state, returns the indices of the enclosing square
      */
     var getEnclosingSquare = function(idx) {
-        var x = idx % 9;
-        var y = Math.floor(idx / 9);
+        var x = idx % 9,
+            y = Math.floor(idx / 9),
+            ret = [], i, j;
         // Take x and y down to the nearest multiple of three
         x -= x % 3;
         y -= y % 3;
-        var ret = [];
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 3; j++) {
                 ret.push(x + j + (y + i) * 9);
             }
         }
@@ -31,8 +31,8 @@ this.Sudoku = (function(window) {
      * the enlosing 3x3 square (a number between 0 and 8)
      */
     var getEnclosingSquareRef = function(idx) {
-        var x = idx % 9;
-        var y = Math.floor(idx / 9);
+        var x = Math.floor(idx % 9),
+            y = Math.floor(idx / 9);
         // Further reduce x
         x = Math.floor(x / 3);
         y = Math.floor(y / 3);
@@ -41,19 +41,13 @@ this.Sudoku = (function(window) {
 
     var currState = [],
         i, j,
-        midpoints = [],
+        // Centre points of each 3x3 square
+        midpoints = [10, 37, 64, 13, 40, 67, 16, 43, 70],
         squares = [],
         rows = [],
         columns = [];
         
     // Calculate the indices (0..80) of all the rows, columns and 3x3 squares
-    for (i = 0; i < 3; i++) {
-        var x = i * 3 + 1;
-        for (j = 0; j < 3; j++) {
-            var y = j * 3 + 1;
-            midpoints.push(x + 9 * y);
-        }
-    }
     for (i = 0; i < 9; i++) {
         squares.push(getEnclosingSquare(midpoints[i]));
         rows.push([]);
