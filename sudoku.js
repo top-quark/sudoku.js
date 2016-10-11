@@ -68,7 +68,6 @@ this.Sudoku = (function(window) {
      * Set the puzzle to an initial state of all 0s
      */
     var initState = function() {
-        //solved = 0;
         currState = [];
         for (i = 0; i < 81; ++i) {
             currState[i] = 0;
