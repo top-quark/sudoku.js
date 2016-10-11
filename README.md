@@ -250,3 +250,8 @@ and add one hole at a time. While this approach will find the minimum number of 
 the results are less aesthetically pleasing and the difficulty spread is hostile - 
 Diabolical difficulty is a bit much for most people.
 
+## Licence
+
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+

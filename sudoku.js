@@ -1,5 +1,5 @@
 /**
- * Sodoku generator and solver
+ * Sudoku generator and solver
  * Copyright (C) 2016 Christopher Williams.
  * This is distributed under the terms of the Apache License,
  *   http://www.apache.org/licenses/LICENSE-2.0
