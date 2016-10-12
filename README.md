@@ -89,7 +89,7 @@ Returns the current state of the puzzle, an 81-length Array with the solutions a
 possibilities at each index in the puzzle expressed as 1 to 9 length Array.
 ```javascript
 var st = Sudoku.state(), i, j, a;
-for (I = 0; i < 81; ++i) {
+for (i = 0; i < 81; ++i) {
     a = st[i];
     for (j = 0; j < a.length; ++j) {
         // Do something with a[j];
