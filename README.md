@@ -48,7 +48,7 @@ var obj = Sudoku.hint();
 ```
 
 The <em>row</em> and <em>col</em> properties are 0-indexed. You can call `hint` repeatedly.
-If the puzzle is insoluble, or has already been solved, this method will return null.
+If the puzzle is unsolvable, or has already been solved, this method will return null.
 
 ### findAll
 If a puzzle has too few hints, it will have multiple solutions. Two or more solutions is
@@ -74,14 +74,14 @@ solution array and the context object passed to the `findAll` method.
 
 ### add
 Sets a value at an index. The value will be rejected if it causes a constraint violation
-but not if it makes the puzzle insoluble. A move can be "undone" by setting the value at
+but not if it makes the puzzle unsolvable. A move can be "undone" by setting the value at
 that index to 0.
 ```javascript
 Sudoku.importGame(".2....5938..5..46.94..6...8..2.3.....6..8.73.7..2.........4.38..7....6..........5");
 Sudoku.add(1, 0); // true  (legal and part of the solution)
 Sudoku.add(2, 0); // false (violates constraints)
 Sudoku.add(0, 0); // true  (undoes the move)
-Sudoku.add(6, 0); // true  (legal despite making the puzzle insoluble)
+Sudoku.add(6, 0); // true  (legal despite making the puzzle unsolvable)
 ```
 
 ### state
@@ -142,32 +142,28 @@ var shuffle = function(a) {
     // As above
 };
 
-var depthFirst = function(index, ctx, callback) {
-    var cellIdx = index;
-    if (ctx.offset) {
-        // Start search at offset rather than 0
-        cellIdx += ctx.offset;
-        cellIdx %= 81;
-    }
+var depthFirst = function(n, index, ctx, callback) {
+    // Search may not have begun at 0
+    index %= 81;
     // Advance past solved cells
-    for (; index < 81 && currState[cellIdx]; ++index) {
-        if (++cellIdx == 81) {
-            cellIdx = 0;
+    for (; n < 81 && currState[index]; ++n) {
+        if (++index == 81) {
+            index = 0;
         }
     }
-    if (index === 81) {
+    if (n === 81) {
         // Got a solution
         return callback(currState.slice(0), ctx);
     }
-    var poss = getPossible(cellIdx), k, ret;
+    var poss = getPossible(index), k, ret;
     if (ctx.random) {
         // Design mode; we want a random solution
         shuffle(poss);          
     }
     for (k = 0; k < poss.length; ++k) {
-        currState[cellIdx] = poss[k];
-        ret = depthFirst(index + 1, ctx, callback);
-        currState[cellIdx] = 0;
+        currState[index] = poss[k];
+        ret = depthFirst(n + 1, index + 1, ctx, callback);
+        currState[index] = 0;
         if (false === ret) {
             // Found as many solutions as are required
             break;
@@ -181,8 +177,9 @@ value. The context argument allows the caller to maintain state (for example, co
 solutions). Designing a puzzle starts with a <em>random</em> solution so this routine 
 allows the possibilities at each step to be randomized.
 
-As for `offset`, this may be specified by the `solve` and `hint` methods. Consider the 
-following puzzle:
+<code>n</code> keeps track of the progress towards a solution while <code>index</code> is
+the index of the cell. As to why there are two values and why they might be different, 
+consider the following puzzle:
 ```
 000 000 014
 790 000 000
@@ -197,14 +194,13 @@ following puzzle:
 000 800 000
 ```
 
-If you're a human, this is actually fairly easy. However, this is a tricky one for an 
-exhaustive search algorithm and if we were to start searching at row 1, column 1 it would take long 
-enough to find a solution for the browser to throw up a slow script warning. If we were
-to start the search from row 7, column 4 instead, finding a solution would be an order of 
-magnitude quicker. This is because there are only two values, 5 and 9, that can go in
-that cell. Therefore, solving the puzzle starts with an initial scan for a cell with only
-two candidate possibilities and starts from there.
-
+While this is an easy puzzle for a human, it's a tricky one for an exhaustive search 
+algorithm and if we were to start searching at row 1, column 1, finding a solution would 
+take long enough for the browser to throw up a slow script warning. If we were to start 
+the search from row 7, column 4 instead, finding a solution becomes an order of magnitude 
+quicker. This is because there are only two values, 5 and 9, that can go in that cell. 
+Therefore, solving the puzzle starts with an initial scan for a cell with only two 
+candidate possibilities and starts from there.
 
 ### Design
 
@@ -270,21 +266,16 @@ Sudoku.design: function() {
 };
 ```
 
-Rather than working backwards from the complete solution and adding holes, it would be
-possible to start with a state of all zeroes and add work forwards, adding hints. This
-approach has two disadvantages:
-
-1. Puzzle generation takes longer because there are more possibilities to search
-when the number of hints is low.
-2. Puzzles are of low quality with an excessive number of hints.
-
 The algorithm generates symmetric puzzles. It is easy to change this - simply ignore `idx2`
-and add one hole at a time. While this approach will find the minimum number of hints,
-the results are less aesthetically pleasing and the difficulty spread is hostile - 
+and add one hole at a time. While this approach is more likely to find the minimum number 
+of hints, the results are less aesthetically pleasing and the difficulty spread is hostile - 
 Diabolical difficulty is a bit much for most people.
 
 ## Licence
 
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Copyright (C) 2016 Christopher Williams.
+This is distributed under the terms of the [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) License,
+in the hope that you may find it useful.
+
 
 

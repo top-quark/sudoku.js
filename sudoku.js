@@ -186,32 +186,28 @@ this.Sudoku = (function(window) {
      * to a callback function which may return true to
      * continue the search or false to stop it.
      */
-    depthFirst = function(index, ctx, callback) {
-        var cellIdx = index;
-        if (ctx.offset) {
-            // Start search at offset rather than 0
-            cellIdx += ctx.offset;
-            cellIdx %= 81;
-        }
+    depthFirst = function(n, index, ctx, callback) {
+        // Search may not have begun at 0
+        index %= 81;
         // Advance past solved cells
-        for (; index < 81 && currState[cellIdx]; ++index) {
-            if (++cellIdx == 81) {
-                cellIdx = 0;
+        for (; n < 81 && currState[index]; ++n) {
+            if (++index == 81) {
+                index = 0;
             }
         }
-        if (index === 81) {
+        if (n === 81) {
             // Got a solution
             return callback(currState.slice(0), ctx);
         }
-        var poss = getPossible(cellIdx), k, ret;
+        var poss = getPossible(index), k, ret;
         if (ctx.random) {
             // Design mode; we want a random solution
             shuffle(poss);          
         }
         for (k = 0; k < poss.length; ++k) {
-            currState[cellIdx] = poss[k];
-            ret = depthFirst(index + 1, ctx, callback);
-            currState[cellIdx] = 0;
+            currState[index] = poss[k];
+            ret = depthFirst(n + 1, index + 1, ctx, callback);
+            currState[index] = 0;
             if (false === ret) {
                 // Found as many solutions as are required
                 break;
@@ -233,6 +229,7 @@ this.Sudoku = (function(window) {
                 return i;
             }
             if (3 === p.length && !ret) {
+                // Use a three candidate one if needs be
                 ret = i;
             }
         }
@@ -252,7 +249,7 @@ this.Sudoku = (function(window) {
          */
         solve: function() {
             var solution, ret = null;
-            depthFirst(0, { offset: findStart() }, function(a, ctx) {
+            depthFirst(0, findStart(), {}, function(a, ctx) {
                 solution = a;
                 return false;
             });
@@ -268,7 +265,7 @@ this.Sudoku = (function(window) {
          */
         hint: function() {
             var ret = null, solution, i, j, v, p, r = [];
-            depthFirst(0, { offset: findStart() }, function(a, ctx) {
+            depthFirst(0, findStart(), {}, function(a, ctx) {
                 solution = a;
                 return false;
             });
@@ -314,7 +311,7 @@ this.Sudoku = (function(window) {
             initState();
             // Generate a random "solution" to an empty grid 
             var solution;
-            depthFirst(0, { random : true }, function(a, ctx) {
+            depthFirst(0, 0, { random : true }, function(a, ctx) {
                 solution = a;
                 return false;
             });
@@ -332,7 +329,7 @@ this.Sudoku = (function(window) {
                     ctx = { solutions : 0 };
                 // Put holes in the current state
                 currState[idx1] = currState[idx2] = 0;
-                depthFirst(0, ctx, function(a, ctx) {
+                depthFirst(0, 0, ctx, function(a, ctx) {
                     // Looking for uniquely solvable
                     return (++ctx.solutions < 2);
                 });
