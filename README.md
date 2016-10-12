@@ -2,6 +2,13 @@
 
 Small but well-formed Sudoku puzzle generator and solver.
 
+This is a Sudoku <em>engine</em> with a simple, clean API. You won't find routines that draw 
+HTML tables or update solution grids. Instead, there are methods that rapidly solve puzzles
+of arbitrary difficulty and generate an endless variety of high quality puzzles.
+
+All methods are in the `Sudoku` namesapce. Details follow. For the interested, the underlying
+algorithms are also documented.
+
 ## Initialisation
 
 ### design
@@ -14,7 +21,8 @@ var g = Sudoku.design();
 
 Generated puzzles are symmetrical and only have a single solution. Although the library 
 does not grade the puzzles generated (yet), around three quarters of the puzzles are easy 
-to moderate in terms of difficulty - symmetrical Diabolical puzzles are relatively rare.
+to moderate in terms of difficulty since Diabolical puzzles that are also symmetrical are 
+relatively rare.
 
 ### importGame
 Imports an existing puzzle:
@@ -266,7 +274,7 @@ Sudoku.design: function() {
 };
 ```
 
-The algorithm generates symmetric puzzles. It is easy to change this - simply ignore `idx2`
+The algorithm generates symmetrical puzzles. It is easy to change this - simply ignore `idx2`
 and add one hole at a time. While this approach is more likely to find the minimum number 
 of hints, the results are less aesthetically pleasing and the difficulty spread is hostile - 
 Diabolical difficulty is a bit much for most people.
