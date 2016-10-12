@@ -198,7 +198,7 @@ following puzzle:
 ```
 
 If you're a human, this is actually fairly easy. However, this is a tricky one for an 
-exhaustive search algorithm and if we were to start searching at (0, 0) it would long 
+exhaustive search algorithm and if we were to start searching at (0, 0) it would take long 
 enough to find a solution for the browser to throw up a slow script warning. If we were
 to start the search from row 6, column 4 instead, finding a solution would be an order of 
 magnitude quicker. This is because there are only two values, 5 and 9, that can go in
