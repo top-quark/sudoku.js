@@ -227,7 +227,7 @@ Sudoku.design: function() {
     initState();
     // Generate a random "solution" to an empty grid 
     var solution;
-    depthFirst(0, { random : true }, function(a, ctx) {
+    depthFirst(0, 0, { random : true }, function(a, ctx) {
         solution = a;
         return false;
     });
@@ -245,7 +245,7 @@ Sudoku.design: function() {
             ctx = { solutions : 0 };
         // Put holes in the current state
         currState[idx1] = currState[idx2] = 0;
-        depthFirst(0, ctx, function(a, ctx) {
+        depthFirst(0, 0, ctx, function(a, ctx) {
             // Looking for uniquely solvable
             return (++ctx.solutions < 2);
         });
