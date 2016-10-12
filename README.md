@@ -198,9 +198,9 @@ following puzzle:
 ```
 
 If you're a human, this is actually fairly easy. However, this is a tricky one for an 
-exhaustive search algorithm and if we were to start searching at (0, 0) it would take long 
+exhaustive search algorithm and if we were to start searching at row 1, column 1 it would take long 
 enough to find a solution for the browser to throw up a slow script warning. If we were
-to start the search from row 6, column 4 instead, finding a solution would be an order of 
+to start the search from row 7, column 4 instead, finding a solution would be an order of 
 magnitude quicker. This is because there are only two values, 5 and 9, that can go in
 that cell. Therefore, solving the puzzle starts with an initial scan for a cell with only
 two candidate possibilities and starts from there.
