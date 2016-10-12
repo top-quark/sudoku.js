@@ -274,6 +274,7 @@ Diabolical difficulty is a bit much for most people.
 ## Licence
 
 Copyright (C) 2016 Christopher Williams.
+
 This is distributed under the terms of the [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) License,
 in the hope that you may find it useful.
 
