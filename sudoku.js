@@ -241,7 +241,7 @@ this.Sudoku = (function(window) {
          * Finds all solutions until told to stop
          */
         findAll: function(ctx, callback) {
-            depthFirst(0, ctx, callback);
+            depthFirst(0, 0, ctx, callback);
         },
         
         /**
