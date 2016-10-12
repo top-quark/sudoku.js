@@ -143,23 +143,31 @@ var shuffle = function(a) {
 };
 
 var depthFirst = function(index, ctx, callback) {
+    var cellIdx = index;
+    if (ctx.offset) {
+        // Start search at offset rather than 0
+        cellIdx += ctx.offset;
+        cellIdx %= 81;
+    }
     // Advance past solved cells
-    for (; index < 81 && currState[index]; ++index) {
+    for (; index < 81 && currState[cellIdx]; ++index) {
+        if (++cellIdx == 81) {
+            cellIdx = 0;
+        }
     }
     if (index === 81) {
         // Got a solution
         return callback(currState.slice(0), ctx);
     }
-    var poss = getPossible(index), k, ret;
+    var poss = getPossible(cellIdx), k, ret;
     if (ctx.random) {
         // Design mode; we want a random solution
-        shuffle(poss);	        
+        shuffle(poss);          
     }
     for (k = 0; k < poss.length; ++k) {
-        // See whether poss[k] leads to a solution
-        currState[index] = poss[k];
+        currState[cellIdx] = poss[k];
         ret = depthFirst(index + 1, ctx, callback);
-        currState[index] = 0;
+        currState[cellIdx] = 0;
         if (false === ret) {
             // Found as many solutions as are required
             break;
@@ -172,6 +180,31 @@ The routine is signalled to stop by its callback returning an explicit `false`
 value. The context argument allows the caller to maintain state (for example, counting
 solutions). Designing a puzzle starts with a <em>random</em> solution so this routine 
 allows the possibilities at each step to be randomized.
+
+As for `offset`, this may be specified by the `solve` and `hint` methods. Consider the 
+following puzzle:
+```
+000 000 014
+790 000 000
+000 200 000
+
+000 003 605
+001 000 000
+000 000 200
+
+060 000 730
+200 140 000
+000 800 000
+```
+
+If you're a human, this is actually fairly easy. However, this is a tricky one for an 
+exhaustive search algorithm and if we were to start searching at (0, 0) it would long 
+enough to find a solution for the browser to throw up a slow script warning. If we were
+to start the search from row 6, column 4 instead, finding a solution would be an order of 
+magnitude quicker. This is because there are only two values, 5 and 9, that can go in
+that cell. Therefore, solving the puzzle starts with an initial scan for a cell with only
+two candidate possibilities and starts from there.
+
 
 ### Design
 

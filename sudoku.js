@@ -84,8 +84,7 @@ this.Sudoku = (function(window) {
         // Check that the test value is not already present
         // in the enclosing square, current row or current
         // column
-        var squareRef = getEnclosingSquareRef(index),
-            square = squares[squareRef],
+        var square = squares[getEnclosingSquareRef(index)],
             rowNo = Math.floor(index / 9),
             colNo = index % 9,
             ret = [], i, j;
@@ -188,25 +187,53 @@ this.Sudoku = (function(window) {
      * continue the search or false to stop it.
      */
     depthFirst = function(index, ctx, callback) {
+        var cellIdx = index;
+        if (ctx.offset) {
+            // Start search at offset rather than 0
+            cellIdx += ctx.offset;
+            cellIdx %= 81;
+        }
         // Advance past solved cells
-        for (; index < 81 && currState[index]; ++index) {
+        for (; index < 81 && currState[cellIdx]; ++index) {
+            if (++cellIdx == 81) {
+                cellIdx = 0;
+            }
         }
         if (index === 81) {
             // Got a solution
             return callback(currState.slice(0), ctx);
         }
-        var poss = getPossible(index), k, ret;
+        var poss = getPossible(cellIdx), k, ret;
         if (ctx.random) {
             // Design mode; we want a random solution
             shuffle(poss);          
         }
         for (k = 0; k < poss.length; ++k) {
-            currState[index] = poss[k];
+            currState[cellIdx] = poss[k];
             ret = depthFirst(index + 1, ctx, callback);
-            currState[index] = 0;
+            currState[cellIdx] = 0;
             if (false === ret) {
                 // Found as many solutions as are required
                 break;
+            }
+        }
+        return ret;
+    },
+    
+    /**
+     * When searching for a brute-force solution, locates a candidate cell to
+     * begin searching
+     */
+    findStart = function() {
+        var ret = 0, i, p;
+        for (i = 0; i < 81; ++i) {
+            p = getPossible(i);
+            if (2 === p.length) {
+                // A two candidate cell is ideal
+                return i;
+            }
+            if (3 === p.length && !ret) {
+                ret = i;
             }
         }
         return ret;
@@ -224,8 +251,8 @@ this.Sudoku = (function(window) {
          * Solves the puzzle (or reports that it can't)
          */
         solve: function() {
-            var solution, ret = null; 
-            depthFirst(0, {}, function(a, ctx) {
+            var solution, ret = null;
+            depthFirst(0, { offset: findStart() }, function(a, ctx) {
                 solution = a;
                 return false;
             });
@@ -241,7 +268,7 @@ this.Sudoku = (function(window) {
          */
         hint: function() {
             var ret = null, solution, i, j, v, p, r = [];
-            depthFirst(0, {}, function(a, ctx) {
+            depthFirst(0, { offset: findStart() }, function(a, ctx) {
                 solution = a;
                 return false;
             });
