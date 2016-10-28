@@ -59,7 +59,7 @@ The <em>row</em> and <em>col</em> properties are 0-indexed. You can call `hint` 
 If the puzzle is unsolvable, or has already been solved, this method will return null.
 
 ### findAll
-If a puzzle has too few hints, it will have multiple solutions. Two or more solutions is
+If a puzzle has too few hints, it will have multiple solutions. Two or more solutions are
 considered undesirable because the puzzle can then only be solved by guesswork. The
 `findAll` method will find multiple solutions until you tell it to stop. For
 example, to verify that a puzzle has a unique solution:
